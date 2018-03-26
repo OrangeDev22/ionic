@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-navbar>
+  <ion-buttons end *ngIf="afAuth.authState | async">
+          <button color="primary" ion-button icon-only (click)="addSong()">
+            <ion-icon name="add"></ion-icon>
+          </button>
+        </ion-buttons>
+        
+    <ion-title>
+      <ion-item class="item item-trns text-center">
+          My music list
+        <ion-avatar item-end *ngIf="afAuth.authState | async">
+          <img src={{currentUser.photoURL}}>
+        </ion-avatar>
+      </ion-item>
+      
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Search"
+    [(ngModel)]="queeryText"
+    (ionInput)="searchUser()">
+      
+    </ion-searchbar>
+  </ion-toolbar>
+
+    <div *ngIf="afAuth.authState | async as user; else showLogin">
+        <h1>Hello {{ user.displayName }}!</h1>
+        <button ion-button color="primary" full (click)="logout()">Logout</button>
+        <ion-list>
+            <ion-item *ngFor="let user of users | async" (click)="showOptions(song.id, song.title, song.likes, song.description, song.link, user.userId, user.displayName)">
+              {{user.displayName}}
+            </ion-item>
+          </ion-list>
+        <ion-fab right bottom>
+          <button ion-fab  (click)="addSong()">
+            <ion-icon name="add" ></ion-icon>
+          </button>
+        </ion-fab>
+
+      </div>
+      <ng-template #showLogin>
+        <p>Please login.</p>
+        <button ion-button color="danger"  full (click)="login()" icon-right>
+          <ion-icon name="logo-googleplus"></ion-icon>
+          Login with Google
+        </button>
+      </ng-template>
+</ion-content>
